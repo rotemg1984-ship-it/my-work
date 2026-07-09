@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת מעקב - 12 מיומנויות הביצוע (ד"ר מינה רז)</title>
+    <style>
+        :root {
+            --primary: #2b5c8f;
+            --success: #1b9aaa;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h1 { 
+            color: var(--primary); 
+            margin-bottom: 5px; 
+            font-size: 1.5rem;
+        }
+        .subtitle { color: #64748b; font-size: 0.95rem; margin-top: 0; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .student-box {
+            margin-bottom: 20px; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input, .form-group select {
+            padding: 12px; 
+            font-size: 1rem;
+            border: 1px solid #cbd5e1; 
+            border-radius: 8px;
+            outline: none;
+            background-color: #fff;
+            width: 100%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        @media (min-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1200px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.1s;
+            border-top: 6px solid var(--primary);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card:active { transform: scale(0.98); }
+
+        .card.completed { border-top-color: var(--success); background-color: #f0fdfa; }
+        .card h3 { margin-top: 0; color: var(--primary); font-size: 1.1rem; }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: #f1f5f9;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #475569;
+        }
+        .card.completed .badge { background: var(--success); color: white; }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 15px;
+        }
+        .btn-success { background: var(--success); }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            justify-content: center; 
+            align-items: flex-end; 
+            z-index: 1000;
+        }
+
+        @media (min-width: 600px) { .modal { align-items: center; } }
+
+        .modal-content {
+            background: white; 
+            padding: 24px; 
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            width: 100%; 
+            max-height: 85vh; 
+            overflow-y: auto;
+            position: relative; 
+        }
+
+        @media (min-width: 600px) {
+            .modal-content { border-radius: 16px; max-width: 550px; }
+        }
+
+        .close-btn { 
+            position: absolute; 
+            top: 15px; 
+            left: 15px; 
+            font-size: 28px; 
+            cursor: pointer; 
+            border: none; 
+            background: none; 
+            color: #94a3b8; 
+        }
+        
+        .section-title { border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-top: 20px; color: var(--primary); }
+        
+        .task-option { 
+            display: flex;
+            align-items: center;
+            padding: 14px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            margin-bottom: 10px; 
+            cursor: pointer; 
+            background: #f8fafc;
+        }
+        .task-option input { margin-left: 12px; transform: scale(1.3); }
+        .task-option span { font-size: 0.95rem; line-height: 1.4; }
+
+        .rating-group { margin-bottom: 15px; }
+        .rating-label { display: block; margin-bottom: 8px; font-weight: 500; }
+        
+        .rating-group select {
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+            background-color: #fff;
+            outline: none;
+        }
+        
+        .hidden { display: none; }
+        
+        #sync-toast {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: var(--success); color: white; padding: 16px;
+            border-radius: 8px; display: none; z-index: 2000;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        @media (min-width: 600px) { #sync-toast { left: 20px; right: auto; width: max-content; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>12 מיומנויות ביצוע תעסוקתיות</h1>
+        <p class="subtitle">מודל הערכה עצמית יומי מבוסס ד"ר מינה רז</p>
+    </header>
+
+    <div class="student-box">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="student-name">שם התלמיד/ה המלא:</label>
+                <input type="text" id="student-name" placeholder="הקלידו שם מלא" oninput="localStorage.setItem('student_name', this.value)">
+            </div>
+            <div class="form-group">
+                <label for="work-date">תאריך פעילות:</label>
+                <input type="date" id="work-date">
+            </div>
+            <div class="form-group">
+                <label for="workshop-select">בחירת סדנה:</label>
+                <select id="workshop-select" onchange="localStorage.setItem('student_workshop', this.value)">
+                    <option value="" disabled selected>בחרו סדנה מהרשימה</option>
+                    <option value="קרמיקה">קרמיקה</option>
+                    <option value="מייקרים">מייקרים</option>
+                    <option value="סלטעים">סלטעים</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid" id="skills-grid"></div>
+</div>
+
+<div id="sync-toast">📊 הנתונים נשלחו בהצלחה לטבלה!</div>
+
+<div class="modal" id="skill-modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <h2 id="modal-title" style="color:var(--primary); margin-top:0;"></h2>
+        <p id="modal-desc" style="color:#64748b; font-style:italic; font-size:0.9rem;"></p>
+
+        <!-- שלב א': תחילת יום עבודה -->
+        <div id="step-start-day">
+            <h3 class="section-title">תחילת יום עבודה: בחירת יעד להתנסות</h3>
+            <div id="tasks-container"></div>
+            <button class="btn" onclick="saveStartDay()">אישור משימה ודיווח תחילת יום</button>
+        </div>
+
+        <!-- שלב ב': סיום יום עבודה -->
+        <div id="step-end-day" class="hidden">
+            <h3 class="section-title">סיום יום עבודה: רפלקציה והערכה עצמית</h3>
+            <p style="font-size:0.95rem;"><strong>היגד העבודה שנבחר בבוקר:</strong> <span id="selected-task-review" style="color:var(--primary);"></span></p>
+            
+            <div id="questions-container"></div>
+
+            <button class="btn btn-success" onclick="saveEndDay()">שמירת רפלקציה ודיווח סיום יום</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // =========================================================================
+    //  קונפיגורציה וחיבור מדויק לגוגל פורמס שלך לפי הקישור ששלחת
+    // =========================================================================
+    const config = {
+        formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSe0-FhmDSE5l3utt4-BKtlcu5csaQ4gAl9cLEsIU8WJypyg_Q/formResponse",
+        entries: {
+            name: "entry.1930577533",
+            date: "entry.1429254166",
+            workshop: "entry.1010727834",
+            skill: "entry.24513046",
+            task: "entry.2125563933",
+            score: "entry.2062376559",
+            status: "entry.527256857"
+        },
+        
+        reflectionQuestions: [
+            { id: "q1", label: "1. באיזו מידה הצלחתי לבצע את ההיגד שבחרתי לאורך יום העבודה?" },
+            { id: "q2", label: "2. באיזו מידה פעלתי באופן עצמאי בביצוע משימה זו?" },
+            { id: "q3", label: "3. האם ארצה להמשיך להתמקד במיומנות זו גם ביום העבודה הבא?" }
+        ],
+
+        skillsData: [
+            { title: "1. נוכחות ועמידה בזמנים", desc: "הגעה רציפה למקום העבודה ועמידה בלוחות הזמנים הנדרשים.", tasks: ["הגעה בזמן למקום ההתנסות (או הקדמה של 5 דקות).", "חזרה מדויקת מההפסקה בדיוק בזמן שהוגדר.", "דיווח מראש לצוות/אחראי במקרה של איחור או היעדרות."] },
+            { title: "2. הופעה חיצונית והיגיינה", desc: "לבוש והופעה מותאמים לדרישות ולנורמות של מקום העבודה.", tasks: ["הגעה בלבוש נקי, מסודר ומותאם לקוד הלבוש של המקום.", "שמירה על הגיינה אישית ורחיצת ידיים לפי הצורך בהתנסות."] },
+            { title: "3. בטיחות וביטחון אישי", desc: "שמירה על כללי הבטיחות בעבודה ומניעת סיכונים לעצמי ולאחרים.", tasks: ["שימוש נכון ובטוח בכלי עבודה ובציוד בהתאם להוראות.", "דיווח מיידי למנהל/ת במקרה של מפגע בטיחותי או תקלה."] },
+            { title: "4. התארגנות בסביבת העבודה", desc: "הכנת סביבת העבודה, ארגון החומרים והחזרתם למקום בסיום העבודה.", tasks: ["הכנת כל הציוד הנדרש לפני שמתחילים בביצוע המשימה.", "שמירה על סדר במהלך העבודה והחזרת הציוד למקום בסוף היום."] },
+            { title: "5. קבלת סמכות", desc: "הקשבה להנחיות הממונה, קבלת משוב וביצוע משימות בהתאם להדרכה.", tasks: ["ביצוע משימות בהתאם להנחיות שניתנו לי על ידי האחראי/ת.", "הקשבה למשוב או תיקון מהמנהל וניסיון לשפר לפיו."] },
+            { title: "6. ביצוע איכותי של משימות", desc: "הבנת המשימה, הקפדה על שלבי הביצוע והגעה לתוצר תקין ומלא.", tasks: ["Bקירה עצמית של התוצר שלי כדי לוודא שעשיתי עבודה מדויקת.", "התמקדות במשימה עד לסיומה המלא באיכות הנדרשת."] },
+            { title: "7. קצב ביצוע", desc: "עבודה בקצב יעיל ומותאם לדרישות המקובלות במקום העבודה.", tasks: ["שמירה על קצב עבודה קבוע שמאפשר לסיים את המשימה בזמן.", "ניסיון להגביר את הקצב במידה והאחראי ביקש לזרז את העבודה."] },
+            { title: "8. התמדה בפעילות", desc: "יכולת להישאר ממוקד במשימה לאורך זמן, גם כשהיא מונוטונית או מאתגרת.", tasks: ["המשך ביצוע המשימה ברצף ללא הפסקות לא מאושרות.", "התמודדות עם קושי במשימה והמשך ניסיונות לפתור אותה."] },
+            { title: "9. עבודת צוות", desc: "שיתוף פעולה עם עמיתים לעבודה, עזרה הדדית ותקשורת מכבדת.", tasks: ["עזרה לחבר לעבודה במידה והוא זקוק לכך והמשימה שלי מאפשרת.", "הקשבה לדעות של אחרים בצוות ותיאום שלבי העבודה איתם."] },
+            { title: "10. התנהגות בהתאמה לנורמות", desc: "התנהלות חברתית מכבדת ומותאמת לקוד ההתנהגות במקום העבודה.", tasks: ["פנייה ודיבור בטון מכבד לחברים, לקוחות ולצוות הניהולי.", "הפרדה בין נושאים אישיים (כמו שימוש בנייד) לזמן העבודה."] },
+            { title: "11. יוזמה ומוטיבציה", desc: "הפגנת עניין בעבודה, רצון ללמוד ובקשת משימות נוספות עם סיום המטלה.", tasks: ["פנייה מיוזמתי לאחראי לקבלת משימה חדשה כשסיימתי את הקודמת.", "הצעת עזרה או פתרון פשוט כשמזהים צורך פתוח במקום העבודה."] },
+            { title: "12. אוריינות דיגיטלית", desc: "שימוש יעיל ובטוח בכלים דיגיטליים, מערכות וטכנולוגיה הנדרשים בעבודה.", tasks: ["שימוש נכון באפליקציה/מחשב/מערכת הדיווח של מקום העבודה.", "שמירה על חוקי אבטחת מידע ופרטיות בשימוש במדיה דיגיטלית."] }
+        ]
+    };
+    // =========================================================================
+
+    let userProgress = JSON.parse(localStorage.getItem('student_ef_progress')) || {};
+    let currentActiveIndex = null;
+
+    document.getElementById('work-date').valueAsDate = new Date();
+
+    if(localStorage.getItem('student_name')) {
+        document.getElementById('student-name').value = localStorage.getItem('student_name');
+    }
+    if(localStorage.getItem('student_workshop')) {
+        document.getElementById('workshop-select').value = localStorage.getItem('student_workshop');
+    }
+
+    function initGrid() {
+        const grid = document.getElementById('skills-grid');
+        grid.innerHTML = '';
+        config.skillsData.forEach((skill, index) => {
+            const prog = userProgress[index] || {};
+            const isCompleted = prog.completed;
+            const hasStarted = prog.selectedTask;
+            
+            let statusText = 'טרם התחיל';
+            if (hasStarted && !isCompleted) statusText = 'בתהליך עבודה';
+            if (isCompleted) statusText = `הושלם (הערכה: ${prog.score})`;
+
+            grid.innerHTML += `
+                <div class="card ${isCompleted ? 'completed' : ''}" onclick="openSkill(${index})">
+                    <h3>${skill.title}</h3>
+                    <p style="font-size:0.85rem; color:#64748b; margin: 8px 0; line-height:1.4;">${skill.desc}</p>
+                    <div class="badge">${statusText}</div>
+                </div>
+            `;
+        });
+
+        const qContainer = document.getElementById('questions-container');
+        qContainer.innerHTML = '';
+        config.reflectionQuestions.forEach((q) => {
+            qContainer.innerHTML += `
+                <div class="rating-group">
+                    <label class="rating-label">${q.label}</label>
+                    <select id="${q.id}-select">
+                        <option value="1">1 - בכלל לא</option>
+                        <option value="2">2 - במידה מועטה</option>
+                        <option value="3" selected>3 - במידה בינונית</option>
+                        <option value="4">4 - במידה רבה</option>
+                        <option value="5">5 - במידה רבה מאוד</option>
+                    </select>
+                </div>
+            `;
+        });
+    }
+
+    function openSkill(index) {
+        currentActiveIndex = index;
+        const skill = config.skillsData[index];
+        const progress = userProgress[index] || {};
+
+        document.getElementById('modal-title').innerText = skill.title;
+        document.getElementById('modal-desc').innerText = skill.desc;
+        const container = document.getElementById('tasks-container');
+        container.innerHTML = '';
+
+        if (!progress.selectedTask) {
+            document.getElementById('step-start-day').classList.remove('hidden');
+            document.getElementById('step-end-day').classList.add('hidden');
+            skill.tasks.forEach((task, i) => {
+                container.innerHTML += `
+                    <label class="task-option">
+                        <input type="radio" name="day-task" value="${task}" ${i===0?'checked':''}>
+                        <span>${task}</span>
+                    </label>
+                `;
+            });
+        } else {
+            document.getElementById('step-start-day').classList.add('hidden');
+            document.getElementById('step-end-day').classList.remove('hidden');
+            document.getElementById('selected-task-review').innerText = progress.selectedTask;
+        }
+        document.getElementById('skill-modal').style.display = 'flex';
+    }
+
+    function sendToGoogleForm(skillTitle, task, score, statusType) {
+        const studentName = document.getElementById('student-name').value.trim();
+        const selectedWorkshop = document.getElementById('workshop-select').value;
+        const selectedDate = document.getElementById('work-date').value;
+        
+        if (!studentName) return;
+
+        const formData = new FormData();
+        formData.append(config.entries.name, studentName);
+        formData.append(config.entries.date, selectedDate);
+        formData.append(config.entries.workshop, selectedWorkshop);
+        formData.append(config.entries.skill, skillTitle);
+        formData.append(config.entries.task, task);
+        formData.append(config.entries.score, score);
+        formData.append(config.entries.status, statusType);
+
+        fetch(config.formUrl, {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors'
+        }).then(() => {
+            const toast = document.getElementById('sync-toast');
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
+        }).catch(err => {
+            console.error("שגיאה בסנכרון:", err);
+        });
+    }
+
+    function saveStartDay() {
+        const studentName = document.getElementById('student-name').value.trim();
+        const selectedWorkshop = document.getElementById('workshop-select').value;
+        
+        if (!studentName) {
+            alert('אנא הקלידו את שמכם המלא בראש הדף לפני תחילת יום העבודה.');
+            return;
+        }
+        if (!selectedWorkshop) {
+            alert('אנא בחרו סדנה מתוך הרשימה לפני אישור המשימה.');
+            return;
+        }
+
+        const selected = document.querySelector('input[name="day-task"]:checked').value;
+        if (!userProgress[currentActiveIndex]) userProgress[currentActiveIndex] = {};
+        
+        userProgress[currentActiveIndex].selectedTask = selected;
+        userProgress[currentActiveIndex].completed = false;
+
+        sendToGoogleForm(config.skillsData[currentActiveIndex].title, selected, "-", "תחילת יום עבודה");
+        saveData();
+    }
+
+    function saveEndDay() {
+        let total = 0;
+        config.reflectionQuestions.forEach(q => {
+            total += parseInt(document.getElementById(`${q.id}-select`).value);
+        });
+        const avg = (total / config.reflectionQuestions.length).toFixed(1);
+
+        userProgress[currentActiveIndex].completed = true;
+        userProgress[currentActiveIndex].score = avg;
+
+        sendToGoogleForm(config.skillsData[currentActiveIndex].title, userProgress[currentActiveIndex].selectedTask, avg, "סיום יום עבודה");
+        saveData();
+    }
+
+    function saveData() {
+        localStorage.setItem('student_ef_progress', JSON.stringify(userProgress));
+        initGrid();
+        closeModal();
+    }
+
+    function closeModal() { document.getElementById('skill-modal').style.display = 'none'; }
+    window.onclick = function(e) { if (e.target == document.getElementById('skill-modal')) closeModal(); }
+    
+    initGrid();
+</script>
+</body>
+</html>
