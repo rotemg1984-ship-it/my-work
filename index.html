@@ -113,7 +113,7 @@
 
         .card:active { transform: scale(0.98); }
 
-        .card.completed { border-top-color: var(--success); background-color: #f0fdfa; }
+        .card.completed { border-top-color: var(--success); background-color: #f0fdf4; }
         .card h3 { margin-top: 0; color: var(--primary); font-size: 1.1rem; }
 
         .badge {
@@ -262,14 +262,12 @@
         <h2 id="modal-title" style="color:var(--primary); margin-top:0;"></h2>
         <p id="modal-desc" style="color:#64748b; font-style:italic; font-size:0.9rem;"></p>
 
-        <!-- שלב א': תחילת יום עבודה -->
         <div id="step-start-day">
             <h3 class="section-title">תחילת יום עבודה: בחירת יעד להתנסות</h3>
             <div id="tasks-container"></div>
             <button class="btn" onclick="saveStartDay()">אישור משימה ודיווח תחילת יום</button>
         </div>
 
-        <!-- שלב ב': סיום יום עבודה -->
         <div id="step-end-day" class="hidden">
             <h3 class="section-title">סיום יום עבודה: רפלקציה והערכה עצמית</h3>
             <p style="font-size:0.95rem;"><strong>היגד העבודה שנבחר בבוקר:</strong> <span id="selected-task-review" style="color:var(--primary);"></span></p>
@@ -283,18 +281,18 @@
 
 <script>
     // =========================================================================
-    //  קונפיגורציה וחיבור מדויק לגוגל פורמס שלך לפי הקישור ששלחת
+    //  קונפיגורציה מעודכנת לפי סדר העמודות המדויק ב-Google Sheets שלך!
     // =========================================================================
     const config = {
         formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSe0-FhmDSE5l3utt4-BKtlcu5csaQ4gAl9cLEsIU8WJypyg_Q/formResponse",
         entries: {
-            name: "entry.1930577533",
-            date: "entry.1429254166",
-            workshop: "entry.1010727834",
-            skill: "entry.24513046",
-            task: "entry.2125563933",
-            score: "entry.2062376559",
-            status: "entry.527256857"
+            name: "entry.1930577533",       // שם (עמודה B)
+            workshop: "entry.1010727834",   // שם הסדנה (עמודה C)
+            skill: "entry.24513046",        // מיומנות (עמודה D)
+            task: "entry.2125563933",       // המשימה שנבחרה (עמודה E)
+            score: "entry.2062376559",      // רפלקציה (עמודה F)
+            status: "entry.527256857",      // סוג הדיווח (עמודה G)
+            date: "entry.1429254166"        // תאריך (עמודה H)
         },
         
         reflectionQuestions: [
@@ -309,7 +307,7 @@
             { title: "3. בטיחות וביטחון אישי", desc: "שמירה על כללי הבטיחות בעבודה ומניעת סיכונים לעצמי ולאחרים.", tasks: ["שימוש נכון ובטוח בכלי עבודה ובציוד בהתאם להוראות.", "דיווח מיידי למנהל/ת במקרה של מפגע בטיחותי או תקלה."] },
             { title: "4. התארגנות בסביבת העבודה", desc: "הכנת סביבת העבודה, ארגון החומרים והחזרתם למקום בסיום העבודה.", tasks: ["הכנת כל הציוד הנדרש לפני שמתחילים בביצוע המשימה.", "שמירה על סדר במהלך העבודה והחזרת הציוד למקום בסוף היום."] },
             { title: "5. קבלת סמכות", desc: "הקשבה להנחיות הממונה, קבלת משוב וביצוע משימות בהתאם להדרכה.", tasks: ["ביצוע משימות בהתאם להנחיות שניתנו לי על ידי האחראי/ת.", "הקשבה למשוב או תיקון מהמנהל וניסיון לשפר לפיו."] },
-            { title: "6. ביצוע איכותי של משימות", desc: "הבנת המשימה, הקפדה על שלבי הביצוע והגעה לתוצר תקין ומלא.", tasks: ["Bקירה עצמית של התוצר שלי כדי לוודא שעשיתי עבודה מדויקת.", "התמקדות במשימה עד לסיומה המלא באיכות הנדרשת."] },
+            { title: "6. ביצוע איכותי של משימות", desc: "הבנת המשימה, הקפדה על שלבי הביצוע והגעה לתוצר תקין ומלא.", tasks: ["בדיקה עצמית של התוצר שלי כדי לוודא שעשיתי עבודה מדויקת.", "התמקדות במשימה עד לסיומה המלא באיכות הנדרשת."] },
             { title: "7. קצב ביצוע", desc: "עבודה בקצב יעיל ומותאם לדרישות המקובלות במקום העבודה.", tasks: ["שמירה על קצב עבודה קבוע שמאפשר לסיים את המשימה בזמן.", "ניסיון להגביר את הקצב במידה והאחראי ביקש לזרז את העבודה."] },
             { title: "8. התמדה בפעילות", desc: "יכולת להישאר ממוקד במשימה לאורך זמן, גם כשהיא מונוטונית או מאתגרת.", tasks: ["המשך ביצוע המשימה ברצף ללא הפסקות לא מאושרות.", "התמודדות עם קושי במשימה והמשך ניסיונות לפתור אותה."] },
             { title: "9. עבודת צוות", desc: "שיתוף פעולה עם עמיתים לעבודה, עזרה הדדית ותקשורת מכבדת.", tasks: ["עזרה לחבר לעבודה במידה והוא זקוק לכך והמשימה שלי מאפשרת.", "הקשבה לדעות של אחרים בצוות ותיאום שלבי העבודה איתם."] },
@@ -318,7 +316,6 @@
             { title: "12. אוריינות דיגיטלית", desc: "שימוש יעיל ובטוח בכלים דיגיטליים, מערכות וטכנולוגיה הנדרשים בעבודה.", tasks: ["שימוש נכון באפליקציה/מחשב/מערכת הדיווח של מקום העבודה.", "שמירה על חוקי אבטחת מידע ופרטיות בשימוש במדיה דיגיטלית."] }
         ]
     };
-    // =========================================================================
 
     let userProgress = JSON.parse(localStorage.getItem('student_ef_progress')) || {};
     let currentActiveIndex = null;
@@ -407,19 +404,22 @@
         
         if (!studentName) return;
 
-        const formData = new FormData();
-        formData.append(config.entries.name, studentName);
-        formData.append(config.entries.date, selectedDate);
-        formData.append(config.entries.workshop, selectedWorkshop);
-        formData.append(config.entries.skill, skillTitle);
-        formData.append(config.entries.task, task);
-        formData.append(config.entries.score, score);
-        formData.append(config.entries.status, statusType);
+        const params = new URLSearchParams();
+        params.append(config.entries.name, studentName);
+        params.append(config.entries.workshop, selectedWorkshop);
+        params.append(config.entries.skill, skillTitle);
+        params.append(config.entries.task, task);
+        params.append(config.entries.score, score);
+        params.append(config.entries.status, statusType);
+        params.append(config.entries.date, selectedDate);
 
         fetch(config.formUrl, {
             method: 'POST',
-            body: formData,
-            mode: 'no-cors'
+            body: params,
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
         }).then(() => {
             const toast = document.getElementById('sync-toast');
             toast.style.display = 'block';
